@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getLatest13F, getInfoTableXMLURL } from "@/lib/edgar";
+import { getLatest13F, getInfoTableXMLURL, UA } from "@/lib/edgar";
 import { parse13F } from "@/lib/parse13f";
 
 export async function GET(
@@ -7,14 +7,6 @@ export async function GET(
   { params }: { params: Promise<{ cik: string }> }
 ) {
   try {
-    // Check for required environment variable
-    if (!process.env.SEC_USER_AGENT) {
-      return NextResponse.json(
-        { error: 'SEC_USER_AGENT environment variable is required for SEC API compliance' }, 
-        { status: 500 }
-      );
-    }
-
     const { cik } = await params;
     
     // Validate CIK format
@@ -30,8 +22,7 @@ export async function GET(
     const latest = await getLatest13F(cik10);
     const infoUrl = await getInfoTableXMLURL(latest.cikNoLead, latest.accNoPlain);
     
-    const ua = { "User-Agent": process.env.SEC_USER_AGENT };
-    const response = await fetch(infoUrl, { headers: ua });
+    const response = await fetch(infoUrl, { headers: UA() });
     
     if (!response.ok) {
       throw new Error(`Failed to fetch XML: ${response.status} ${response.statusText}`);
