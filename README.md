@@ -35,49 +35,44 @@ A Next.js application that tracks top holdings from legendary investment manager
 - **APIs**: SEC EDGAR, OpenFIGI (optional)
 - **Deployment**: Vercel with cron jobs
 
-## Getting Started
+## 📚 Documentation
 
-### Prerequisites
+For comprehensive guides and detailed information, see the [`docs/`](./docs/) directory:
 
-- Node.js 18+ and npm
-- Optional: OpenFIGI API key for better ticker mapping
+- **[📖 Getting Started](./docs/development.md)** - Local setup and development workflow
+- **[🚀 Deployment Guide](./docs/deployment.md)** - GitHub Actions and Vercel setup
+- **[🏗️ Architecture Overview](./docs/architecture.md)** - System design and data flow
+- **[📋 Full Documentation Index](./docs/README.md)** - Complete documentation hub
 
-### Installation
+## 🚀 Quick Start
 
-1. Clone the repository
-2. Install dependencies:
+1. **Clone and setup**:
    ```bash
+   git clone https://github.com/Dougal-McGuire/13f-portfolio.git
+   cd 13f-portfolio
    npm install
    ```
 
-3. Set up environment variables:
+2. **Configure environment**:
    ```bash
    cp .env.example .env.local
-   ```
-   
-   Edit `.env.local` and add:
-   ```
-   SEC_USER_AGENT="YourAppName (your-email@domain.com)"
-   OPENFIGI_API_KEY="your-api-key" # Optional
+   # Edit .env.local with SEC_USER_AGENT (required)
    ```
 
-4. Run the development server:
+3. **Start development**:
    ```bash
    npm run dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000)
+📖 **For detailed setup instructions, see [docs/development.md](./docs/development.md)**
 
-## Deployment
+## 🚀 Deployment
 
-### Vercel (Recommended)
+The app uses GitHub Actions for automated deployments:
+- **Push to `main`** → Preview deployment
+- **Create release** → Production deployment
 
-1. Connect your GitHub repository to Vercel
-2. Set environment variables in Vercel dashboard:
-   - `SEC_USER_AGENT`: Required for SEC API compliance
-   - `OPENFIGI_API_KEY`: Optional, improves ticker mapping
-
-3. Deploy - the app includes a `vercel.json` with cron jobs for automatic updates
+🔧 **For complete deployment setup, see [docs/deployment.md](./docs/deployment.md)**
 
 ### Environment Variables
 
