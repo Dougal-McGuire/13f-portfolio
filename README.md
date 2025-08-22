@@ -2,6 +2,8 @@
 
 [![Deploy to Vercel](https://github.com/Dougal-McGuire/13f-portfolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/Dougal-McGuire/13f-portfolio/actions/workflows/deploy.yml)
 
+🔥 **Live Demo**: The app automatically deploys the latest changes from this repository.
+
 A Next.js application that tracks top holdings from legendary investment managers using SEC 13F filings. The app constructs an equal-weight portfolio from the largest position of 10 prominent fund managers.
 
 ## Features
