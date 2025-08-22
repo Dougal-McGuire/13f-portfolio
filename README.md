@@ -1,5 +1,7 @@
 # 13F Portfolio Tracker
 
+[![Deploy to Vercel](https://github.com/Dougal-McGuire/13f-portfolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/Dougal-McGuire/13f-portfolio/actions/workflows/deploy.yml)
+
 A Next.js application that tracks top holdings from legendary investment managers using SEC 13F filings. The app constructs an equal-weight portfolio from the largest position of 10 prominent fund managers.
 
 ## Features
@@ -26,7 +28,7 @@ A Next.js application that tracks top holdings from legendary investment manager
 
 ## Technology Stack
 
-- **Framework**: Next.js 14 with App Router
+- **Framework**: Next.js 15 with App Router
 - **UI**: shadcn/ui components with Tailwind CSS
 - **State Management**: Zustand
 - **Data Fetching**: SWR
