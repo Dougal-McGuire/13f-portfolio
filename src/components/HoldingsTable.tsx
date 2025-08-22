@@ -11,14 +11,14 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cusipToTickerWithFallback } from "@/lib/mapping";
+// Removed cusipToTickerWithFallback import - tickers now come from server
 import type { Holding } from "@/lib/parse13f";
 
 interface AggregatedHolding extends Holding {
   aggregatedValue: number;
   aggregatedShares: number;
   percentage: number;
-  ticker?: string;
+  // ticker already included in Holding type
 }
 
 interface HoldingsTableProps {
@@ -27,11 +27,8 @@ interface HoldingsTableProps {
 }
 
 export function HoldingsTable({ holdings, isLoading }: HoldingsTableProps) {
-  const [aggregatedHoldings, setAggregatedHoldings] = useState<AggregatedHolding[]>([]);
-  const [processingTickers, setProcessingTickers] = useState(false);
-
-  // First, aggregate holdings synchronously
-  const aggregated = useMemo(() => {
+  // Aggregate holdings synchronously (tickers are already resolved by server)
+  const aggregatedHoldings = useMemo(() => {
     if (!holdings.length) return [];
 
     // Calculate total value for percentage calculation
@@ -43,6 +40,7 @@ export function HoldingsTable({ holdings, isLoading }: HoldingsTableProps) {
       if (existing) {
         existing.aggregatedValue += holding.value;
         existing.aggregatedShares += holding.shares;
+        // Keep the ticker from the first occurrence (they should be the same)
       } else {
         acc.set(holding.cusip, {
           ...holding,
@@ -63,37 +61,6 @@ export function HoldingsTable({ holdings, isLoading }: HoldingsTableProps) {
     // Sort by aggregated value descending
     return result.sort((a, b) => b.aggregatedValue - a.aggregatedValue);
   }, [holdings]);
-
-  // Then resolve tickers asynchronously
-  useEffect(() => {
-    if (!aggregated.length) {
-      setAggregatedHoldings([]);
-      return;
-    }
-
-    const processTickers = async () => {
-      setProcessingTickers(true);
-      
-      try {
-        const withTickers = await Promise.all(
-          aggregated.map(async (holding) => ({
-            ...holding,
-            ticker: await cusipToTickerWithFallback(holding.cusip)
-          }))
-        );
-        
-        setAggregatedHoldings(withTickers);
-      } catch (error) {
-        console.error('Error resolving tickers:', error);
-        // Fall back to holdings without tickers
-        setAggregatedHoldings(aggregated);
-      } finally {
-        setProcessingTickers(false);
-      }
-    };
-
-    processTickers();
-  }, [aggregated]);
 
   if (isLoading) {
     return (

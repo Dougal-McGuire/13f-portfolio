@@ -7,6 +7,7 @@ export type Holding = {
   value: number;               // $ thousands per 13F standard
   shares: number;
   putCall?: string | null;
+  ticker?: string | null;      // Added by server-side ticker resolution
 };
 
 export function parse13F(xml: string): Holding[] {

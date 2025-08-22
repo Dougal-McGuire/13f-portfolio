@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getLatest13F, getInfoTableXMLURL, UA } from "@/lib/edgar";
 import { parse13F } from "@/lib/parse13f";
+import { cusipToTickerWithFallback } from "@/lib/mapping";
 
 export async function GET(
   _: Request, 
@@ -31,13 +32,21 @@ export async function GET(
     const xml = await response.text();
     const holdings = parse13F(xml);
     
+    // Resolve tickers for all holdings on the server side
+    const holdingsWithTickers = await Promise.all(
+      holdings.map(async (holding) => ({
+        ...holding,
+        ticker: await cusipToTickerWithFallback(holding.cusip)
+      }))
+    );
+    
     return NextResponse.json({ 
       cik: cik10, 
       reportDate: latest.reportDate, 
       filingDate: latest.filingDate, 
       accession: latest.accession, 
       infoUrl, 
-      holdings 
+      holdings: holdingsWithTickers 
     });
   } catch (error) {
     console.error('Error fetching 13F data:', error);
