@@ -2,29 +2,20 @@ import { NextResponse } from "next/server";
 import { MANAGERS } from "@/lib/investors";
 import { cusipToTickerWithFallback } from "@/lib/mapping";
 import { parse13F } from "@/lib/parse13f";
-import { getInfoTableXMLURL, getLatest13F } from "@/lib/edgar";
+import { getInfoTableXMLURL, getLatest13F, UA } from "@/lib/edgar";
 import type { PortfolioPick, PortfolioResponse } from "@/lib/types";
 
 export async function GET(req: Request) {
   try {
-    // Check for required environment variable
-    if (!process.env.SEC_USER_AGENT) {
-      return NextResponse.json(
-        { error: 'SEC_USER_AGENT environment variable is required for SEC API compliance' }, 
-        { status: 500 }
-      );
-    }
-
     const { searchParams } = new URL(req.url);
     const dedupe = searchParams.get("dedupe") === "1";
-    const ua = { "User-Agent": process.env.SEC_USER_AGENT };
 
     const rows = await Promise.all(MANAGERS.map(async (m): Promise<PortfolioPick | null> => {
       try {
         const latest = await getLatest13F(m.cik);
         const infoUrl = await getInfoTableXMLURL(latest.cikNoLead, latest.accNoPlain);
         
-        const response = await fetch(infoUrl, { headers: ua });
+        const response = await fetch(infoUrl, { headers: UA() });
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }

@@ -1,5 +1,5 @@
-const UA = () => ({ 
-  "User-Agent": process.env.SEC_USER_AGENT || "13F-Portfolio (no-email@domain.com)" 
+export const UA = () => ({ 
+  "User-Agent": process.env.SEC_USER_AGENT || "13F-Portfolio-Tracker (contact@13f-portfolio.com)" 
 });
 
 type RecentSubmission = {
